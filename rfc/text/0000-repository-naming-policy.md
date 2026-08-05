@@ -76,13 +76,12 @@ The naming policy has the following requirements:
     `Patina` and `Embedded Controller` become `patina` and `embedded_controller`.
   - Reserved organization-wide scope labels are defined by this RFC and must not be introduced by individual
     repositories.
+    - `common` is used for repositories associated with multiple projects or not clearly associated with a single
+      project.
+    - `governance` is used for the primary ODP governance repository and repositories that support organization-wide
+      governance through discussion or documentation.
+    - `platform` is used for repositories that integrate a bootable demonstration for a hardware or emulated target.
   - The repository that represents the primary project may use the scope label by itself.
-  - This RFC reserves `common` for repositories associated with multiple projects or not clearly associated with
-    a single project.
-  - This RFC reserves `governance` for the primary ODP governance repository and repositories that support
-    organization-wide governance through discussion or documentation.
-  - This RFC reserves `platform` for repositories that integrate a bootable demonstration for a hardware or emulated
-    target.
   - Additional organization-wide scope labels require an update to this RFC.
   - The scope label identifies the ODP project or organization-wide grouping associated with a repository and does
     not assign repository ownership.
@@ -95,15 +94,13 @@ The naming policy has the following requirements:
   - When a vendor name is needed, include it in the same `<purpose>` label as the item it identifies, separated with an
     underscore; for example, `bq40z50_ti`.
   - Project maintainers approve purpose labels within their scope.
-- `<temporary_status>` is optional, follows `<purpose>`, and may only be `fork` or `handoff`, indicating why a
-  repository is hosted temporarily by ODP.
-  - The `<temporary_status>` label uses `fork` for a temporary fork and `handoff` for a repository intended for handoff
-    to an external owner.
-  - A repository with this label is classified as temporary and must be removed from ODP as soon as practical after its
-    changes or contents have moved out of the organization.
-  - For a temporary fork, the `<purpose>` label uses the canonical upstream repository name targeted for the ODP changes,
-    converted to a valid label according to this policy.
-  - For a handoff repository, the `<purpose>` label identifies the item and should include its intended owner.
+- `<temporary_status>` follows `<purpose>`, and indicates why a repository is hosted temporarily by ODP.
+  - The label uses the following pre-defined names:
+    - `fork` represents a fork of an external repository that contains ODP changes, is classified as temporary, and
+      must be removed from ODP as soon as practical after its changes or contents have been upstreamed. A fork will
+      also require the `<purpose>` label to the upstream repository's name.
+    - `handoff` represents a reposory created by ODP, but is intended to be moved to an external organization's
+      repository as soon as practical and removed from ODP.
   - If ODP intends to maintain a repository, the repository must not include a `<temporary_status>` label.
   - An external vendor name used within the `<purpose>` label does not imply a temporary status.
 - New ODP repositories must use this policy when they are created; existing repositories need a plan for adoption.
