@@ -11,6 +11,8 @@ This text can be modified over time. Add a change log entry for every change mad
 - 2026-08-05: Initial RFC created.
 - 2026-08-12: Replaced reason-specific temporary repository labels with the generic `staging` label and moved
               submodule guidance to the requirements section.
+- 2026-08-12: Added preliminary study of which current repositories need to be renamed and clarified exemptions
+              in the requirements.
 
 ## Motivation
 
@@ -60,43 +62,24 @@ This RFC uses the following terms for naming cases:
 
 The naming policy has the following requirements:
 
+- This policy applies to public, active repositories hosted in the ODP GitHub organization. The following repositories
+  are exempt:
+  - Ancillary repositories whose names are established by GitHub or an organization-wide convention.
+  - Private repositories while they remain private.
+  - Archived repositories while they remain archived.
+  - Existing vendor repositories already staged for transfer out of ODP when this RFC is adopted.
 - Repository names use the pattern `<scope>[-<purpose>[-staging]]`.
-- Labels use lowercase ASCII letters and digits, with underscores between words.
-- Hyphens separate labels and do not appear within a label.
-- `<scope>` is required and indicates the ODP project or reserved organization-wide grouping associated with the
-  repository.
-  - Approved project scope labels are derived from the ODP project names maintained by the
-    [governing board](https://opendevicepartnership.org/projects) and normalized according to this policy. For example,
-    `Patina` and `Embedded Controller` become `patina` and `embedded_controller`.
-  - Reserved organization-wide scope labels are defined by this RFC and must not be introduced by individual
-    repositories.
-    - `common` is used for repositories associated with multiple projects or not clearly associated with a single
-      project.
-    - `governance` is used for the primary ODP governance repository and repositories that support organization-wide
-      governance through discussion or documentation.
-    - `platform` is used for repositories that integrate a bootable demonstration for a hardware or emulated target.
-  - The repository that represents the primary project may use the scope label by itself.
-  - Additional organization-wide scope labels require an update to this RFC.
-  - The scope label identifies the ODP project or organization-wide grouping associated with a repository and does
-    not assign repository ownership.
-- `<purpose>` is the tool, module, platform target, or other purpose that distinguishes the repository within its
-  scope. This label is required unless the repository represents the primary project or is an ancillary repository.
-  - The `<purpose>` label is omitted for the repository that represents the primary project.
-  - All other non-ancillary repositories include a `<purpose>` label.
-  - The label describes why the repository exists or what it is for, not its implementation language, packaging format,
-    or repository type.
-  - When a vendor name is needed, include it in the same `<purpose>` label as the item it identifies, separated with an
-    underscore; for example, `bq40z50_ti`.
-  - Project maintainers approve purpose labels within their scope.
-- The optional `staging` suffix follows `<purpose>` and indicates that a repository is hosted temporarily by ODP.
-  - A staging repository must be removed from ODP as soon as practical after its contents have been upstreamed,
-    transferred to an external owner, or are no longer needed.
-  - If ODP intends to maintain a repository, the repository must not include the `staging` suffix.
-  - An external vendor name used within the `<purpose>` label does not imply that the repository is staging.
+- Labels use lowercase ASCII letters and digits. Hyphens separate labels, and underscores separate words within a
+  label.
+- `<scope>` is required and identifies an approved ODP project or a reserved organization-wide grouping. Additional
+  reserved organization-wide scope labels require an update to this RFC.
+- `<purpose>` identifies what distinguishes a repository within its scope. It is required unless the repository
+  represents the primary project. Project maintainers approve purpose labels within their scope.
+- The `staging` suffix is required when ODP does not intend to host a repository long term and must not be used when ODP
+  intends to maintain the repository. A staging repository must be removed from ODP as soon as practical after its
+  contents have been upstreamed, transferred, or are no longer needed.
 - New ODP repositories must use this policy when they are created; existing repositories need a plan for adoption.
-- Ancillary repositories retain the names required by GitHub or an applicable organization-wide convention.
-- This policy applies only to the names of repositories hosted in the ODP GitHub organization. It does not govern the
-  name or path under which an ODP repository is included as a Git submodule in another repository.
+- This policy does not govern the name or path under which a repository is included as a Git submodule.
 
 ## Unresolved Questions
 
@@ -157,32 +140,144 @@ Not applicable.
 
 ## Guide-Level Explanation
 
-Choose labels from left to right:
+Choose labels for scope, purpose, and if staging is needed in the name `<scope>[-<purpose>[-staging]]`:
 
-1. Select the ODP project most directly associated with the repository as `<scope>` or a reserved organization-wide
-   label when applicable.
-2. Add `<purpose>` unless the repository represents the primary project. Choose terms that a contributor is likely to
-   search for, such as a capability, upstream repository, hardware target, or vendor and item name.
-3. Add the `staging` suffix when ODP does not intend to host the repository long term. Omit it for repositories that
-  ODP intends to maintain.
+- Scope: Select the ODP project most directly associated with the repository. Approved labels are derived from the
+  ODP project names maintained by the [governing board](https://opendevicepartnership.org/projects) and normalized
+  according to this policy. For example, `Patina` becomes `patina`.  Or use a reserved organization-wide scope when
+  no individual project is the appropriate scope:
+  - `common` for repositories associated with multiple projects or not clearly associated with one project.
+  - `governance` for the primary ODP governance repository and repositories supporting organization-wide governance or
+    rule enforcement.
+  - `platform` for repositories integrating a bootable demonstration for a hardware or emulated target.
+- Purpose: Select a label that represents the primary project within the scope. Describe why the repository exists,
+  rather than its language, packaging format, or repository type. When a vendor identifies an item, include both in
+  the same label, separated by an underscore; for example, `bq40z50_ti`.
+- Staging: Add the staging suffix when ODP does not intend to host and maintain the repository. A vendor name in
+  `<purpose>` does not by itself mean the repository is staging.
 
-The following examples illustrate how selected current repository names could follow this convention. They do not
-mandate the names to use going forward.
+As of 2026-08-12, a total of 89 repositories were visible to the author of this RFC under the ODP organization.  The
+following tables list suggested actions to take according to this specification for each one.  If other repositories
+are present in the org and are not listed due to access rights, they would fall under the 'private repo' listing table
+below.
 
-| Current Name | New Name | Notes |
+### Public Repositories that need changes
+
+The following 32 repositories out of the 89 were determined to be the ones that may need name changes.  There is
+another directive to reduce the number of repositories (example, 'embedded-drivers' repo with common build tools,
+documentation, layout, CI, etc.), which if done first could reduce this number to around 20.
+
+| Proposed Name | Current Name | Notes |
 | --- | --- | --- |
-| OpenDevicePartnership.github.io | OpenDevicePartnership.github.io | Unchanged ancillary repository |
-| governance | governance | Primary repository for the reserved `governance` scope |
-| documentation | governance-documentation | Organization-wide documentation supporting ODP governance |
-| cortex-m-stack | common-cortex_m_stack | ODP-owned Cortex-M support code not specific to one project |
-| odp-utilities | common-utilities | ODP-owned tools used by multiple projects |
-| pico-de-gallo | common-pico_de_gallo | Standalone ODP tool not associated with one project |
-| odp-platform-qemu-arm-virt | platform-qemu_arm_virt | Arm-specific emulation platform that boots to a Windows desktop |
-| odp-platform-radxa-orion-o6 | platform-radxa_orion_o6 | Platform demonstration that boots a Radxa Orion O6 to a Windows desktop |
-| edk2 | platform-edk2-staging | Temporary EDK II fork for platform builds; changes are intended for upstreaming |
-| odp-embedded-controller | embedded_controller | Primary Embedded Controller project repository |
-| is31fl3743b | embedded_controller-is31fl3743b_lumissil-staging | ODP-authored driver intended for handoff to Lumissil |
-| bq40z50 | embedded_controller-bq40z50_ti-staging | ODP-authored driver intended for handoff to TI |
-| zephyr | embedded_controller-zephyr-staging | Temporary Zephyr fork for EC repositories; changes are intended for upstreaming |
-| patina-apps | patina-apps | Applications specific to the Patina project |
-| patina-qemu | patina-qemu | QEMU emulation repository specific to the Patina project |
+| **common** | | |
+| common-cga | cga | Call graph analysis tool |
+| common-crateplace | crateplace | Embedded crate placement tool |
+| common-pico_de_gallo | pico-de-gallo | QEMU build tooling |
+| common-qemu_builder | odp-qemu-builder | QEMU build tooling |
+| **embedded** | | |
+| embedded | odp-embedded-controller | Primary Embedded Controller project repository |
+| embedded-keyboard_rs | embedded-keyboard-rs | Matrix keyboard driver |
+| embedded-power_sequence | embedded-power-sequence | SoC power sequencing HAL |
+| embedded-usb_pd | embedded-usb-pd | USB Power Delivery types |
+| embedded-utilities | odp-utilities | Tools used across ODP EC projects |
+| embedded-cortex_m_stack | cortex-m-stack | ODP-owned Cortex-M stack usage tools |
+| embedded-systemview_tracing | systemview-tracing | Tracing support |
+| embedded-slimloader | ec-slimloader | Embedded Controller stage-one bootloader |
+| embedded-zephyr_lang_rust-staging | zephyr-lang-rust | Temporary Zephyr fork |
+| embedded-zephyr-staging | zephyr | Temporary Zephyr fork |
+| **governance** | | |
+| governance-discussions | discussions | Organization-wide community discussions |
+| governance-documentation | documentation | Organization-wide documentation supporting ODP governance |
+| governance-rust_driver_template | drive-rs | Rust driver project template; confirm organization-wide scope |
+| governance-rust_crate_audits | rust-crate-audits | Organization-wide Rust crate audits |
+| **patina** | | |
+| patina-dxe_core_qemu | patina-dxe-core-qemu | Patina DXE Core build for QEMU |
+| patina-fw_patcher | patina-fw-patcher | Patina firmware patching tool |
+| patina-readiness_tool | patina-readiness-tool | Patina platform readiness tools |
+| **platform** | | |
+| platform-common | odp-platform-common | Common platform integration content |
+| platform-qemu | odp-platform-qemu-arm-virt | Arm virtual platform demonstration |
+| platform-radxa_orion_o6 | odp-platform-radxa-orion-o6 | Radxa Orion O6 platform demonstration |
+| platform-windows_drivers | odp-windows-drivers | Windows drivers |
+| platform-arm_trusted_firmware-staging | arm-trusted-firmware | Trusted Firmware-A mirror |
+| platform-edk2-staging | edk2 | Temporary EDK II fork for platform builds |
+| platform-ffa-staging | ffa | Arm Firmware Framework library |
+| **secure services** | | |
+| services | embedded-services | Primary Secure Services framework and service implementations |
+| services-hafnium | odp-secure-services | Hafnium deployment of secure services |
+| services-hafnium_platforms-staging | odp-hafnium-project | Imported Hafnium platform configurations with ODP-specific changes |
+| N/A (unused) | hafnium | Mirror repo with no ODP activity, assuming it will be deleted |
+
+### Public Repositories Named Properly
+
+Under this RFC, several of the repositories are already named properly.  This assumes the name used to represent each of the projects under
+the ODP umbrella are patina, embedded, and services.  This list removes another 16 of the 89 repositories from the list of names that need
+to change.
+
+| Repository Name | Notes |
+| --- | --- |
+| embedded-batteries | Battery fuel gauge and charger HAL |
+| embedded-cfu | Component Firmware Update library |
+| embedded-fans | Fan control HAL |
+| embedded-mcu | MCU-agnostic traits and libraries |
+| embedded-perfmon | Confirm purpose and long-term ownership |
+| embedded-regulator | Voltage regulator HAL |
+| embedded-sensors | Sensor HAL |
+| governance | Primary repository for the reserved `governance` scope |
+| patina | Primary Patina project repository |
+| patina-apps | Patina applications |
+| patina-components | Components used with Patina |
+| patina-devops | Patina development operations |
+| patina-edk2 | Patina definitions for EDK II-style C code |
+| patina-mtrr | Patina Memory Type Range Register support |
+| patina-paging | Patina paging support |
+| patina-qemu | Patina QEMU demonstration |
+
+### Exempt Repositories
+
+Under this RFC, any ancillary, private, currently staged vendor, and archived repos are exempt from the naming convention.
+Those rules allow 41 of the 89 repositories to be removed from the naming change.
+
+| Repository Name | Policy |
+| --- | --- |
+| .github | Ancillary repository |
+| basic-template | Private repository |
+| bq25763 | Private repository |
+| ec-slimloader-descriptors | Archived public repository |
+| ec-test-app | Archived public repository |
+| embassy-imxrt | Current vendor staging repository |
+| embassy-mcxa | Current vendor staging repository |
+| embassy-npcx | Current vendor staging repository |
+| embedded-rust-template | Private repository |
+| gh-orchestrator | Private repository |
+| mcxa-pac | Current vendor staging repository |
+| mec17xx-pac | Current vendor staging repository |
+| mctp-rs | Archived public repository |
+| mimxrt600-fcb | Current vendor staging repository |
+| mimxrt633s-pac | Current vendor staging repository |
+| mimxrt685s-pac | Current vendor staging repository |
+| mimxrt685s-examples | Archived public repository |
+| modern-payload | Private repository |
+| npcx490m-pac | Current vendor staging repository |
+| npcx490m-examples | Archived public repository |
+| odp-platform-qemu-q35 | Private repository |
+| OpenDevicePartnership.github.io | Ancillary repository |
+| patina-lzma-rs | Private repository |
+| pfd-devops | Private repository |
+| slimloader | Private repository |
+| soc-embedded-controller | Private repository |
+| standup-dashboard | Private repository |
+| uefi-bds | Private repository |
+| uefi-corosensei | Archived public repository |
+| uefi-sdk | Private repository |
+| INA4230 | Texas Instruments staging repository |
+| bq25723 | Texas Instruments staging repository |
+| bq25770g | Texas Instruments staging repository |
+| bq25773 | Texas Instruments staging repository |
+| bq40z50 | Texas Instruments staging repository |
+| bq41z50 | Texas Instruments staging repository |
+| is31fl3743b | Lumissil Microsystems staging repository |
+| lis2dw12-i2c | STMicroelectronics staging repository |
+| pcal6416a | NXP Semiconductors staging repository |
+| tmp108 | Texas Instruments staging repository |
+| tps6699x | Texas Instruments staging repository |
